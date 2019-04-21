@@ -1,18 +1,10 @@
 #!/usr/bin/env python
-from flask import Flask,request
-# from flask.ext.sqlalchemy import SQLAlchemy
+from flask import Flask,request,jsonify
 
-# from flask.ext.heroku import Heroku
 from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
-# heroku = Heroku(app)
-# db = SQLAlchemy(app)
 
-# from fetch_results import get_details_using_ifsc,get_details_using_bank_name_city
 from fetch_res_postgresql import get_details_using_ifsc,get_details_using_bank_name_city
-
-
-
 
 @app.route('/ifsc',methods=["POST"])
 def hello_world():
@@ -24,8 +16,13 @@ def hello_world():
 			print(data)
 
 			ifsc=data['ifsc']
+			li=["ifsc","bank_id","branch","address","city","dist","state"]
+			dc={}
 			ans=get_details_using_ifsc(ifsc)
-			return str(ans)
+			# print(type(ans))
+			for i,j in enumerate(ans[0]):
+				dc[li[i]]=j
+			return jsonify(dc)
 
 		except Exception as e:
 			print(e)
@@ -45,14 +42,25 @@ def hello():
 			name=data['bank_name']
 			city=data['city']
 			ans=get_details_using_bank_name_city(name,city)
-			return str(ans)
+
+			li=["ifsc","bank_id","branch","address","city","dist","state"]
+
+			dc={}
+
+			for i,j in enumerate(ans):
+				dc[i]={}
+
+				for no,row_elements in enumerate(j):
+					dc[i][li[no]]=row_elements
+		
+
+			# print(type(ans))
+			return jsonify(dc)
 
 		except Exception as e:
 			print(e)
 		
-	return 'No success'	
-
-
+	return 'No success'
 if __name__ == '__main__':
 	app.run(debug=True,port=8000)
 
