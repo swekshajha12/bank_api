@@ -1,5 +1,4 @@
 import psycopg2
-# conn=psycopg2.connect("dbname=banks user=postgres password=kajukatli")
 DATABASE_URL = "postgres://cerofkbynglilr:2b7fbe4f62f1a6a37b9f1d4dad5acf495e226edd06fa169828e17009b89e0bb8@ec2-54-221-236-144.compute-1.amazonaws.com:5432/dacmbcb97s0j9e"
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 cur=conn.cursor()
